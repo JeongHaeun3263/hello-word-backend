@@ -1,29 +1,22 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const PORT = 4000;
+const { wordsRouter } = require('./api/v1/index');
+require('./db/index');
 
+app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// root (/)
 app.get('/', (req, res) => {
 	res.send('Hello Word');
 });
 
-app.get('/words', (req, res) => {
-	const words = [
-		{
-			name: 'persistence',
-			form: 'none',
-			meaning:
-				'firm or obstinate continuance in a course of action in spite of difficulty or opposition.',
-		},
-		{
-			name: 'achieve',
-			form: 'verb',
-			meaning:
-				'successfully bring about or reach (a desired objective, level, or result) by effort, skill, or courage.',
-		},
-	];
-	res.json({ words });
-});
+// words (/words)
+app.use('/words', wordsRouter);
 
 app.listen(PORT, () => {
-	console.log(`✅ server is listening on http://localhost:${PORT}`);
+	console.log(`✅ Server is listening on http://localhost:${PORT}`);
 });
